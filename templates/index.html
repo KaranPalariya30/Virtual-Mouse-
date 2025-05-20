@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🖱️ AI Gesture-Controlled Mouse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Splash screen -->
+<div class="splash-screen" id="splash">
+    <h1>🖱️ Launching Digital Mouse...</h1>
+</div>
+
+<!-- Main dashboard -->
+<div class="overlay">
+    <h1 class="fade-in">🖐️ AI Gesture-Controlled Virtual Mouse</h1>
+
+    <div class="video-container fade-in">
+        <img src="{{ url_for('video_feed') }}" id="video-stream" alt="Video Stream">
+    </div>
+
+    <div class="status fade-in delay">
+        <h2>📡 Live Gesture Status</h2>
+        <p><strong>Gesture:</strong> <span id="gesture">Loading...</span></p>
+        <p><strong>Confidence:</strong> <span id="confidence">0%</span></p>
+    </div>
+
+    <div class="gesture-actions fade-in delay">
+        <h3>🧠 Gesture Action Preview</h3>
+        <div class="buttons">
+            <button id="left-click">Left Click</button>
+            <button id="right-click">Right Click</button>
+            <button id="scroll-up">Scroll Up</button>
+            <button id="scroll-down">Scroll Down</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>💡 Developed as an AI project using CNN + Flask + OpenCV + Keras</p>
+    </footer>
+</div>
+
+<script>
+    function updateGesture() {
+        fetch('/gesture')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('gesture').innerText = data.gesture;
+                document.getElementById('confidence').innerText = (data.confidence * 100).toFixed(2) + "%";
+            });
+    }
+    setInterval(updateGesture, 500);
+
+    // Splash screen fade out
+    window.onload = () => {
+        const splash = document.getElementById('splash');
+        splash.classList.add('hide');
+        setTimeout(() => splash.remove(), 1000);
+    };
+
+    // Optional action previews
+    document.getElementById('left-click').onclick = () => alert('Left Click Triggered!');
+    document.getElementById('right-click').onclick = () => alert('Right Click Triggered!');
+    document.getElementById('scroll-up').onclick = () => alert('Scroll Up Triggered!');
+    document.getElementById('scroll-down').onclick = () => alert('Scroll Down Triggered!');
+</script>
+
+</body>
+</html>
